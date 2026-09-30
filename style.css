@@ -192,3 +192,7 @@ img{max-width:100%}
 .notice{border:1px solid var(--warn);border-radius:8px;padding:12px;font-size:13.5px}
 .refresh{border:1px solid var(--line);background:transparent;color:var(--ink-2);font:600 12px/1 var(--f-body);padding:6px 10px;border-radius:99px;cursor:pointer}
 .refresh:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+
+/* ---------- Hero logo ---------- */
+.logo-badge{width:clamp(112px,32vw,176px);aspect-ratio:1;max-width:100%;border-radius:50%;background:#ffffff;display:grid;place-items:center;padding:16%;box-shadow:0 0 0 4px rgba(255,255,255,.18),0 10px 24px rgba(0,0,0,.35)}
+.logo-badge img{width:100%;height:100%;object-fit:contain;display:block}

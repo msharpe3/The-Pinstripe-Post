@@ -11,7 +11,7 @@ The Pinstripe Post is a hub for live Yankees scores, broadcast info, roster move
 - **Scores:** the last game's linescore and top Yankees performers, recent results, upcoming games, and AL East standings.
 - **Roster:** the active roster, the injured list, and roster moves from the last 30 days.
 - **News:** the latest Yankees headlines, plus links to beat coverage.
-- **Design:** a pinstripe theme with light and dark modes, built mobile-first, plus a baseball you can drag to spin.
+- **Design:** a pinstripe theme with light and dark modes, built mobile-first.
 
 ## How it works
 
@@ -27,7 +27,8 @@ It's a static site (HTML, CSS, and plain JavaScript) with no build step, hosted 
 | --- | --- |
 | `index.html` | Page layout |
 | `style.css` | Design tokens and styles |
-| `app.js` | Data loading, rendering, and the spinning baseball |
+| `app.js` | Data loading and rendering |
+| `logo.png` | Header logo |
 | `icon.svg` | Browser and home-screen icon |
 
 ## Disclaimer

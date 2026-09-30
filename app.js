@@ -64,67 +64,6 @@
   if (!TABS.includes(startTab)) { try { startTab = localStorage.getItem("pp-tab") || "game"; } catch (e) { startTab = "game"; } }
   showTab(TABS.includes(startTab) ? startTab : "game");
 
-  /* ---------------- Spinning baseball ---------------- */
-  (function ball() {
-    const cv = $("ball"), ctx = cv.getContext("2d");
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let rx = 0.5, ry = 0.3, vx = reduce ? 0 : 0.004, vy = reduce ? 0 : 0.012, drag = null;
-    function size() { const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; cv.width = r.width * d; cv.height = r.height * d; }
-    size(); addEventListener("resize", size);
-    const A = 0.72, B = 0.28, C = 2 * Math.sqrt(A * B);
-    const seam = (t) => [A * Math.cos(t) + B * Math.cos(3 * t), A * Math.sin(t) - B * Math.sin(3 * t), C * Math.sin(2 * t)];
-    const norm = (v) => { const l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; };
-    const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-    const scale = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
-    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-    function rot(p) {
-      let [x, y, z] = p, c = Math.cos(ry), s = Math.sin(ry);
-      [x, z] = [x * c + z * s, -x * s + z * c];
-      c = Math.cos(rx); s = Math.sin(rx);
-      [y, z] = [y * c - z * s, y * s + z * c];
-      return [x, y, z];
-    }
-    function draw() {
-      const W = cv.width, H = cv.height, R = Math.min(W, H) * 0.44, cx = W / 2, cy = H / 2;
-      ctx.clearRect(0, 0, W, H);
-      const g = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R);
-      g.addColorStop(0, "#ffffff"); g.addColorStop(0.7, "#eef0ec"); g.addColorStop(1, "#b9bdb6");
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
-      for (const off of [0.035, -0.035]) {
-        ctx.beginPath(); let pen = false;
-        for (let i = 0; i <= 260; i++) {
-          const p = seam((i / 260) * Math.PI * 2);
-          const q = rot(norm([p[0], p[1], p[2] * (1 + off * 3)]));
-          if (q[2] > 0) { const X = cx + q[0] * R, Y = cy + q[1] * R; pen ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); pen = true; } else pen = false;
-        }
-        ctx.strokeStyle = "rgba(120,120,120,.35)"; ctx.lineWidth = R * 0.012; ctx.stroke();
-      }
-      for (let i = 0; i < 108; i++) {
-        const t = (i / 108) * Math.PI * 2, p = seam(t), p2 = seam(t + 0.001);
-        const tg = norm([p2[0] - p[0], p2[1] - p[1], p2[2] - p[2]]);
-        const n = norm(cross(p, tg)), fwd = scale(tg, 0.03);
-        const qa = rot(norm(add(add(p, scale(n, 0.075)), fwd))), qb = rot(norm(add(add(p, scale(n, -0.075)), fwd))), qm = rot(p);
-        if (qm[2] <= 0.02) continue;
-        ctx.strokeStyle = `rgba(200,16,46,${0.55 + 0.45 * qm[2]})`; ctx.lineWidth = R * 0.022; ctx.lineCap = "round";
-        ctx.beginPath(); ctx.moveTo(cx + qa[0] * R, cy + qa[1] * R); ctx.lineTo(cx + qm[0] * R, cy + qm[1] * R); ctx.lineTo(cx + qb[0] * R, cy + qb[1] * R); ctx.stroke();
-      }
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.strokeStyle = "rgba(0,0,0,.18)"; ctx.lineWidth = R * 0.01; ctx.stroke();
-    }
-    function loop() {
-      if (!drag) { ry += vy; rx += vx; if (!reduce) vy += (0.006 - vy) * 0.01; vx *= 0.995; }
-      draw(); requestAnimationFrame(loop);
-    }
-    cv.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY }; cv.setPointerCapture(e.pointerId); });
-    cv.addEventListener("pointermove", (e) => {
-      if (!drag) return;
-      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-      ry += dx * 0.01; rx += dy * 0.01; vy = dx * 0.004; vx = dy * 0.004; drag = { x: e.clientX, y: e.clientY };
-    });
-    cv.addEventListener("pointerup", () => (drag = null));
-    cv.addEventListener("pointercancel", () => (drag = null));
-    requestAnimationFrame(loop);
-  })();
-
   /* ---------------- State ---------------- */
   let games = [];          // all games in the schedule window
   let focus = null;        // live, else next, else last game
