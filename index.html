@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <div class="wrap">
@@ -23,7 +23,7 @@
       <p class="sub" id="heroSub">Live scores, where to watch, roster moves and news from the Bronx.</p>
       <div class="rec" id="heroRec"></div>
     </div>
-    <div class="logo-badge"><img src="logo.png" alt="New York Yankees logo" width="285" height="288"></div>
+    <div class="logo-badge"><img src="logo.png?v=3" alt="New York Yankees logo" width="285" height="288"></div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
@@ -74,6 +74,13 @@
   </div>
   <div class="foot"><span id="updated">Connecting to MLB…</span><span>Unofficial fan site · data from MLB Stats API · not affiliated with MLB or the Yankees</span></div>
 </div>
-<script src="app.js"></script>
+<script>
+  // Show startup errors on the page so they're visible on a phone.
+  window.addEventListener("error", function (e) {
+    var el = document.getElementById("updated");
+    if (el) el.textContent = "Page error: " + (e.message || "script failed to load") + ". Pull down to refresh.";
+  }, true);
+</script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
