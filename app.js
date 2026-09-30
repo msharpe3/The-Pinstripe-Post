@@ -54,7 +54,7 @@
   const state = (g) => (isOff(g) ? "off" : g.status.abstractGameState); // Preview | Live | Final | off
 
   /* ---------------- Tabs ---------------- */
-  const TABS = ["game", "scores", "roster", "news"];
+  const TABS = ["game", "scores", "roster", "highlights", "news"];
   function showTab(name) {
     TABS.forEach((t) => { $("t-" + t).setAttribute("aria-selected", String(t === name)); $("p-" + t).hidden = t !== name; });
     try { localStorage.setItem("pp-tab", name); } catch (e) { /* storage unavailable */ }
@@ -88,6 +88,7 @@
     renderGame();
     renderList();
     renderLast();
+    renderHighlightGames();
     if (focus) loadLineup(focus);
     scheduleNext(!!live);
   }
@@ -389,6 +390,96 @@
     $("moves").innerHTML = list.length ? list.map((t) =>
       `<div><span>${esc(fmtShort(t.date + "T12:00:00"))}</span><p style="margin:0">${esc(t.description)}</p></div>`
     ).join("") : `<p class="empty">No roster moves in the last 30 days.</p>`;
+  }
+
+  /* ---------------- Highlights ---------------- */
+  let hlGamePk = null, hlTimer = null, hlItems = [], hlPlaying = null;
+
+  function hlCandidates() {
+    const live = games.filter((g) => state(g) === "Live");
+    const finals = games.filter((g) => state(g) === "Final").slice(-6).reverse();
+    return [...live, ...finals];
+  }
+
+  function renderHighlightGames() {
+    const list = hlCandidates();
+    const wrap = $("hlGames");
+    if (!list.length) { wrap.innerHTML = ""; $("hlList").innerHTML = `<p class="empty">No recent games with highlights.</p>`; return; }
+    if (!hlGamePk || !list.some((g) => g.gamePk === hlGamePk)) hlGamePk = list[0].gamePk;
+    wrap.innerHTML = list.map((g) => {
+      const s = side(g), o = other(s), st = state(g), opp = oppName(g);
+      const label = st === "Live" ? `Live · ${opp.abbreviation}` :
+        `${fmtShort(g.gameDate)} ${s === "home" ? "vs" : "@"} ${opp.abbreviation} ${g.teams[s].score > g.teams[o].score ? "W" : "L"} ${g.teams[s].score}-${g.teams[o].score}`;
+      return `<button type="button" data-pk="${g.gamePk}" aria-pressed="${g.gamePk === hlGamePk}">${esc(label)}</button>`;
+    }).join("");
+    wrap.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+      hlGamePk = +b.dataset.pk;
+      wrap.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      closePlayer();
+      loadHighlights();
+    }));
+    loadHighlights();
+  }
+
+  function pickVideo(item) {
+    const pb = item.playbacks || [];
+    const byName = (n) => pb.find((p) => p.name === n && p.url);
+    return (byName("mp4Avc") || byName("highBit") || pb.find((p) => /\.mp4(\?|$)/.test(p.url || "")) || byName("hlsCloud") || {}).url || "";
+  }
+  function pickThumb(item) {
+    const cuts = (item.image?.cuts || []).filter((c) => c.src);
+    if (!cuts.length) return "";
+    const good = cuts.filter((c) => (c.width || 0) >= 320).sort((a, b) => (a.width || 0) - (b.width || 0));
+    return (good[0] || cuts[cuts.length - 1]).src;
+  }
+  function dur(s) { return (s || "").replace(/^00:/, "").replace(/^0(\d:)/, "$1"); }
+
+  async function loadHighlights() {
+    clearTimeout(hlTimer);
+    const pk = hlGamePk;
+    if (!pk) return;
+    const g = games.find((x) => x.gamePk === pk);
+    const isLive = g && state(g) === "Live";
+    $("hlState").textContent = isLive ? "Updating live" : "";
+    try {
+      const d = await api(`/api/v1/game/${pk}/content`);
+      if (pk !== hlGamePk) return; // user switched games while loading
+      hlItems = (d.highlights?.highlights?.items || [])
+        .map((it) => ({ id: it.id || it.slug || it.headline, title: it.headline || it.title, blurb: it.blurb || it.description || "", date: it.date, duration: dur(it.duration), video: pickVideo(it), thumb: pickThumb(it) }))
+        .filter((it) => it.title && it.video)
+        .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+      renderClips();
+    } catch (e) {
+      $("hlList").innerHTML = `<p class="empty">Couldn't load highlights for this game. Try again in a moment.</p>`;
+    }
+    if (isLive) hlTimer = setTimeout(() => { if (!document.hidden && hlGamePk === pk) loadHighlights(); else hlTimer = setTimeout(loadHighlights, 120000); }, 120000);
+  }
+
+  function renderClips() {
+    const list = $("hlList");
+    if (!hlItems.length) { list.innerHTML = `<p class="empty">No highlights posted for this game yet. Clips usually appear within a few minutes of a big play.</p>`; return; }
+    list.innerHTML = hlItems.map((it, i) => `<button type="button" class="clip${hlPlaying === it.id ? " now" : ""}" data-i="${i}">
+        <div class="thumb">${it.thumb ? `<img src="${esc(it.thumb)}" alt="" loading="lazy">` : ""}${it.duration ? `<span>${esc(it.duration)}</span>` : ""}</div>
+        <b>${esc(it.title)}</b></button>`).join("");
+    list.querySelectorAll(".clip").forEach((b) => b.addEventListener("click", () => play(hlItems[+b.dataset.i])));
+  }
+
+  function play(it) {
+    if (!it) return;
+    hlPlaying = it.id;
+    const v = $("hlVideo");
+    v.src = it.video;
+    if (it.thumb) v.poster = it.thumb;
+    $("hlTitle").textContent = it.title;
+    $("hlBlurb").textContent = it.blurb;
+    $("hlPlayer").hidden = false;
+    v.play().catch(() => {});
+    $("hlPlayer").scrollIntoView({ behavior: "smooth", block: "start" });
+    renderClips();
+  }
+  function closePlayer() {
+    const v = $("hlVideo"); v.pause(); v.removeAttribute("src"); v.load();
+    $("hlPlayer").hidden = true; hlPlaying = null;
   }
 
   /* ---------------- News (best effort) ---------------- */

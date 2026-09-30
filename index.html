@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <div class="wrap">
@@ -23,13 +23,14 @@
       <p class="sub" id="heroSub">Live scores, where to watch, roster moves and news from the Bronx.</p>
       <div class="rec" id="heroRec"></div>
     </div>
-    <div class="logo-badge"><img src="logo.png?v=4" alt="New York Yankees logo" width="285" height="288"></div>
+    <div class="logo-badge"><img src="logo.png?v=5" alt="New York Yankees logo" width="285" height="288"></div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
     <button role="tab" id="t-game" aria-controls="p-game" aria-selected="true">Game</button>
     <button role="tab" id="t-scores" aria-controls="p-scores" aria-selected="false">Scores</button>
     <button role="tab" id="t-roster" aria-controls="p-roster" aria-selected="false">Roster</button>
+    <button role="tab" id="t-highlights" aria-controls="p-highlights" aria-selected="false">Highlights</button>
     <button role="tab" id="t-news" aria-controls="p-news" aria-selected="false">News</button>
   </nav>
 
@@ -52,6 +53,18 @@
     <div class="card"><h2>Injured list</h2><div class="inj" id="inj"><p class="empty">Loading…</p></div></div>
     <div class="card"><h2>Recent moves</h2><div class="moves" id="moves"><p class="empty">Loading…</p></div></div>
     <div class="card"><h2>Active roster</h2><div class="groups" id="groups" style="margin-top:6px"><p class="empty">Loading…</p></div></div>
+  </section>
+
+  <section class="panel" id="p-highlights" role="tabpanel" aria-labelledby="t-highlights" hidden>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h2>Highlights</h2><span class="pill" id="hlState"></span></div>
+      <div class="chips" id="hlGames" role="group" aria-label="Choose a game"></div>
+      <div class="player" id="hlPlayer" hidden>
+        <video id="hlVideo" controls playsinline preload="metadata"></video>
+        <div class="player-meta"><b id="hlTitle"></b><p id="hlBlurb"></p></div>
+      </div>
+      <div class="clips" id="hlList"><p class="empty">Loading highlights…</p></div>
+    </div>
   </section>
 
   <section class="panel" id="p-news" role="tabpanel" aria-labelledby="t-news" hidden>
@@ -81,6 +94,6 @@
     if (el) el.textContent = "Page error: " + (e.message || "script failed to load") + ". Pull down to refresh.";
   }, true);
 </script>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>

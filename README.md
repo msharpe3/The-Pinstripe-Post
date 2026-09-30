@@ -10,6 +10,7 @@ The Pinstripe Post is a hub for live Yankees scores, broadcast info, roster move
 - **Where to watch:** TV, streaming, radio, and Spanish-language broadcasts for each game.
 - **Scores:** the last game's linescore and top Yankees performers, recent results, upcoming games, and AL East standings.
 - **Roster:** the active roster, the injured list, and roster moves from the last 30 days.
+- **Highlights:** official MLB video clips from the live game and the last several games, playable right on the page. During a live game, new clips show up every couple of minutes.
 - **News:** the latest Yankees headlines, plus links to beat coverage.
 - **Design:** a pinstripe theme with light and dark modes, built mobile-first.
 
