@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Pinstripe Post</title>
+<meta name="description" content="Live Yankees scores, where to watch, roster moves, and news.">
+<meta name="theme-color" content="#0c2340">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pinstripe Post">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="min">
+      <div class="eyebrow" style="color:var(--accent)">New York Yankees</div>
+      <h1>The Pinstripe<span>Post</span></h1>
+      <p class="sub" id="heroSub">Live scores, where to watch, roster moves and news from the Bronx.</p>
+      <div class="rec" id="heroRec"></div>
+    </div>
+    <div class="ballbox"><canvas id="ball" aria-label="Baseball graphic, drag to spin" role="img"></canvas><div class="ballhint">Drag to spin</div></div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="t-game" aria-controls="p-game" aria-selected="true">Game</button>
+    <button role="tab" id="t-scores" aria-controls="p-scores" aria-selected="false">Scores</button>
+    <button role="tab" id="t-roster" aria-controls="p-roster" aria-selected="false">Roster</button>
+    <button role="tab" id="t-news" aria-controls="p-news" aria-selected="false">News</button>
+  </nav>
+
+  <section class="panel" id="p-game" role="tabpanel" aria-labelledby="t-game">
+    <div class="card" id="gameCard"><p class="empty">Loading the latest Yankees game…</p></div>
+    <div class="card" id="watchCard"><div class="row" style="justify-content:space-between"><h2>Where to watch</h2><span class="pill" id="watchWhen"></span></div>
+      <div class="watch" id="watch" style="margin-top:12px"><p class="empty">Broadcast info loads with the game.</p></div></div>
+    <div class="card" id="lineupCard" hidden><h3>Yankees lineup</h3><ol class="lineup" id="lineup"></ol></div>
+  </section>
+
+  <section class="panel" id="p-scores" role="tabpanel" aria-labelledby="t-scores" hidden>
+    <div class="card" id="lastCard"><h3 id="lastTitle">Last game</h3><div class="tbl"><table id="lineTbl"></table></div>
+      <div id="decisions" class="row" style="margin-top:10px"></div>
+      <h3 style="margin-top:14px">Top Yankees performers</h3><div class="perf" id="perf"></div></div>
+    <div class="card"><h2>Results &amp; schedule</h2><div class="glist" id="glist"><p class="empty">Loading games…</p></div></div>
+    <div class="card"><h3>AL East standings</h3><div class="tbl"><table id="standTbl"></table></div></div>
+  </section>
+
+  <section class="panel" id="p-roster" role="tabpanel" aria-labelledby="t-roster" hidden>
+    <div class="card"><h2>Injured list</h2><div class="inj" id="inj"><p class="empty">Loading…</p></div></div>
+    <div class="card"><h2>Recent moves</h2><div class="moves" id="moves"><p class="empty">Loading…</p></div></div>
+    <div class="card"><h2>Active roster</h2><div class="groups" id="groups" style="margin-top:6px"><p class="empty">Loading…</p></div></div>
+  </section>
+
+  <section class="panel" id="p-news" role="tabpanel" aria-labelledby="t-news" hidden>
+    <div class="card"><h2>Latest headlines</h2><div class="news" id="news" style="margin-top:8px"><p class="empty">Loading headlines…</p></div></div>
+    <div class="card"><h3>Read more</h3>
+      <div class="linkgrid">
+        <a href="https://www.mlb.com/yankees/news" target="_blank" rel="noopener"><b>Yankees.com</b><span>Official team news</span></a>
+        <a href="https://www.mlb.com/yankees/roster/transactions" target="_blank" rel="noopener"><b>Transactions</b><span>Every call-up, IL stint and trade</span></a>
+        <a href="https://www.espn.com/mlb/team/_/name/nyy/new-york-yankees" target="_blank" rel="noopener"><b>ESPN</b><span>News, scores and stats</span></a>
+        <a href="https://www.nytimes.com/athletic/mlb/team/yankees/" target="_blank" rel="noopener"><b>The Athletic</b><span>Beat coverage and analysis</span></a>
+        <a href="https://www.nj.com/yankees/" target="_blank" rel="noopener"><b>NJ.com</b><span>Daily beat reporting</span></a>
+        <a href="https://www.pinstripealley.com/" target="_blank" rel="noopener"><b>Pinstripe Alley</b><span>Fan community</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="row">
+    <a class="btn" id="gamedayBtn" href="https://www.mlb.com/yankees/scores" target="_blank" rel="noopener">MLB Gameday ↗</a>
+    <button class="refresh" id="refreshBtn" type="button">Refresh now</button>
+  </div>
+  <div class="foot"><span id="updated">Connecting to MLB…</span><span>Unofficial fan site · data from MLB Stats API · not affiliated with MLB or the Yankees</span></div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
