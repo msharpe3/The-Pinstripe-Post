@@ -2,7 +2,7 @@
 
 The Pinstripe Post is a hub for live Yankees scores, broadcast info, roster moves, headlines, and more, delivered fresh from the Bronx.
 
-**Live site:** https://msharpe3.github.io/the-pinstripe-post/
+**Live site:** https://msharpe3.github.io/The-Pinstripe-Post/
 
 ## Features
 
