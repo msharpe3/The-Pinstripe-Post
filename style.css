@@ -194,5 +194,7 @@ img{max-width:100%}
 .refresh:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 
 /* ---------- Hero logo ---------- */
-.logo-badge{width:clamp(76px,20vw,112px);aspect-ratio:1;max-width:100%;border-radius:50%;background:#ffffff;display:grid;place-items:center;padding:14%;box-shadow:0 0 0 4px rgba(255,255,255,.18),0 10px 24px rgba(0,0,0,.35)}
-.logo-badge img{width:100%;height:100%;object-fit:contain;display:block}
+.logo-badge{width:clamp(96px,26vw,144px);aspect-ratio:1;max-width:100%;display:grid;place-items:center}
+.logo-badge img{width:100%;height:100%;object-fit:contain;display:block;
+  /* thin white outline so the navy logo reads on the navy header */
+  filter:drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 8px 14px rgba(0,0,0,.35))}
