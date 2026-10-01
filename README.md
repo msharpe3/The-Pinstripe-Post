@@ -49,7 +49,7 @@ Alerts come from a small service in `worker/` that runs on Cloudflare Workers (f
 | `sw.js` | Shows notifications and opens the site when one is tapped |
 | `config.js` | Alert service address (written by the deploy workflow) |
 | `manifest.webmanifest` | Home Screen app settings |
-| `icon.svg`, `icon-*.png`, `apple-touch-icon.png` | Browser and Home Screen icons |
+| `favicon.png`, `icon-*.png`, `apple-touch-icon.png` | Browser and Home Screen icons |
 | `worker/` | The alert service (Cloudflare Worker) |
 
 ## Disclaimer

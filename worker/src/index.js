@@ -140,17 +140,25 @@ export class Alerts extends DurableObject {
         const key = "sub:" + (await sha(String(body.endpoint || "")));
         const rec = await this.storage.get(key);
         if (!rec) return json({ error: "This device isn't signed up for alerts." }, 404);
-        const status = await this.push(key, rec, { title: "The Pinstripe Post", body: "Test alert: you're all set for Yankees alerts. ⚾", tag: "test", url: this.env.SITE_URL }, { urgency: "high" });
+        const status = await this.push(key, rec, { title: "Test alert", body: "You're all set for Yankees alerts. ⚾", tag: "test", url: this.env.SITE_URL }, { urgency: "high" });
         return json({ ok: status >= 200 && status < 300, status });
       }
 
       case "/status": {
         const subs = await this.subscribers();
-        return json({ subscribers: subs.length, lastTick: (await this.storage.get("lastTick")) || null });
+        return json({ subscribers: subs.length, lastTick: (await this.storage.get("lastTick")) || null, lastError: (await this.storage.get("lastError")) || null });
       }
 
-      case "/tick":
-        return json({ sent: await this.tick() });
+      case "/tick": {
+        const started = new Date().toISOString();
+        try {
+          return json({ sent: await this.tick() });
+        } catch (e) {
+          // Keep the error where /status can show it.
+          await this.storage.put("lastError", { at: started, message: String(e && e.message || e) });
+          return json({ error: String(e && e.message || e) }, 500);
+        }
+      }
     }
     return json({ error: "Not found" }, 404);
   }

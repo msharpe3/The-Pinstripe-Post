@@ -70,7 +70,7 @@
     }
     if (!supported) return steps(`<div class="notice">This browser doesn't support notifications. Try Safari on iPhone (from the Home Screen icon), or Chrome or Edge on a computer.</div>`);
     if (Notification.permission === "denied") {
-      return steps(`<div class="notice">Notifications are blocked for this site. On iPhone, go to <b>Settings → Notifications → Pinstripe Post</b> and turn on <b>Allow Notifications</b>, then come back here.</div>`);
+      return steps(`<div class="notice">Notifications are blocked for this site. On iPhone, go to <b>Settings → Notifications → The Pinstripe Post</b> and turn on <b>Allow Notifications</b>, then come back here.</div>`);
     }
     const sub = await currentSub();
     setBtn(!!sub);
@@ -121,7 +121,7 @@
     try {
       const sub = await currentSub();
       const out = await call("/test", { endpoint: sub.endpoint });
-      msg(out.ok ? "Sent. It should appear in a few seconds. If it doesn't, check Settings → Notifications → Pinstripe Post." : "The push service didn't accept it (code " + out.status + "). Try turning alerts off and on.", out.ok ? "good" : "bad");
+      msg(out.ok ? "Sent. It should appear in a few seconds. If it doesn't, check Settings → Notifications → The Pinstripe Post." : "The push service didn't accept it (code " + out.status + "). Try turning alerts off and on.", out.ok ? "good" : "bad");
     } catch (e) { msg("Couldn't send a test: " + e.message, "bad"); }
     b.disabled = false;
   }

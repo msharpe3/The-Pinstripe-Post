@@ -1,6 +1,6 @@
 {
   "name": "The Pinstripe Post",
-  "short_name": "Pinstripe Post",
+  "short_name": "The Pinstripe Post",
   "description": "Live Yankees scores, where to watch, roster moves, highlights, and alerts.",
   "start_url": "./",
   "scope": "./",
