@@ -9,10 +9,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pinstripe Post">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 <div class="wrap">
@@ -22,8 +23,12 @@
       <h1>The Pinstripe<span>Post</span></h1>
       <p class="sub" id="heroSub">Live scores, where to watch, roster moves and news from the Bronx.</p>
       <div class="rec" id="heroRec"></div>
+      <button type="button" class="hero-alerts" id="alertsBtn" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>
+        <span id="alertsBtnText">Game alerts</span>
+      </button>
     </div>
-    <div class="logo-badge"><img src="logo.png?v=7" alt="New York Yankees logo" width="285" height="288"></div>
+    <div class="logo-badge"><img src="logo.png?v=8" alt="New York Yankees logo" width="285" height="288"></div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
@@ -115,6 +120,12 @@
   </div>
   <div class="foot"><span id="updated">Connecting to MLB…</span><span>Unofficial fan site · data from MLB Stats API · not affiliated with MLB or the Yankees</span></div>
 </div>
+<dialog class="pcard alerts" id="alertsDlg" aria-labelledby="alTitle">
+  <button type="button" class="pc-close" id="alClose" aria-label="Close">×</button>
+  <h2 id="alTitle">Game alerts</h2>
+  <p class="al-sub">Get notified on this phone, even when the site is closed.</p>
+  <div id="alBody"></div>
+</dialog>
 <dialog class="pcard" id="playerDlg" aria-labelledby="pcName">
   <button type="button" class="pc-close" id="pcClose" aria-label="Close">×</button>
   <div id="pcBody"></div>
@@ -129,6 +140,8 @@
     if (el) el.textContent = "Page error: " + (e.message || "script failed to load") + ". Pull down to refresh.";
   }, true);
 </script>
-<script src="app.js?v=7"></script>
+<script src="config.js?v=8"></script>
+<script src="alerts.js?v=8"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

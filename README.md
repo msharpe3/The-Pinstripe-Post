@@ -12,6 +12,7 @@ The Pinstripe Post is a hub for live Yankees scores, broadcast info, roster move
 - **Live box score:** batting and pitching lines for both teams, updating during the game. The full box score for the last game is on the Scores tab.
 - **Playoffs:** the full AL and NL bracket from the Wild Card round through the World Series, with series scores. This tab appears only during the postseason.
 - **Player cards:** tap any underlined player name to see a photo, season stats, and the last five games.
+- **Game alerts:** push notifications on your phone, even with the site closed: game starting soon, lineup posted, Yankees runs, the other team tying or taking the lead, and the final score. Pick which ones you want.
 - **Where to watch:** TV, streaming, radio, and Spanish-language broadcasts for each game.
 - **Scores:** the last game's linescore and top Yankees performers, recent results, upcoming games, and AL East standings.
 - **Roster:** the active roster, the injured list, and roster moves from the last 30 days.
@@ -27,6 +28,15 @@ It's a static site (HTML, CSS, and plain JavaScript) with no build step, hosted 
 - Otherwise, the schedule refreshes every 5 minutes, or every minute when first pitch is close.
 - Updates pause while the tab is in the background and resume when you come back.
 
+## Alerts service
+
+Alerts come from a small service in `worker/` that runs on Cloudflare Workers (free plan). Once a minute it checks MLB for Yankees games and sends Web Push notifications to subscribed phones. Subscribers and alert history are stored in a Durable Object.
+
+- Deployed automatically by `.github/workflows/deploy-alerts.yml` whenever `worker/` changes. The workflow also writes the service address into `config.js`.
+- Needs repository secrets `CLOUDFLARE_API_TOKEN` (from the "Edit Cloudflare Workers" token template) and `CLOUDFLARE_ACCOUNT_ID`.
+- On iPhone, alerts require iOS 16.4+ and opening the site from the Home Screen icon.
+- Check service health at `<service address>/status`.
+
 ## Files
 
 | File | What it does |
@@ -35,7 +45,12 @@ It's a static site (HTML, CSS, and plain JavaScript) with no build step, hosted 
 | `style.css` | Design tokens and styles |
 | `app.js` | Data loading and rendering |
 | `logo.png` | Header logo |
-| `icon.svg` | Browser and home-screen icon |
+| `alerts.js` | Alert settings and sign-up |
+| `sw.js` | Shows notifications and opens the site when one is tapped |
+| `config.js` | Alert service address (written by the deploy workflow) |
+| `manifest.webmanifest` | Home Screen app settings |
+| `icon.svg`, `icon-*.png`, `apple-touch-icon.png` | Browser and Home Screen icons |
+| `worker/` | The alert service (Cloudflare Worker) |
 
 ## Disclaimer
 

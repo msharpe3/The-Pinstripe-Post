@@ -1,0 +1,20 @@
+name = "pinstripe-alerts"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+
+# Check for Yankees game updates once a minute.
+[triggers]
+crons = ["* * * * *"]
+
+[[durable_objects.bindings]]
+name = "ALERTS"
+class_name = "Alerts"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Alerts"]
+
+[vars]
+ALLOWED_ORIGIN = "https://msharpe3.github.io"
+SITE_URL = "https://msharpe3.github.io/The-Pinstripe-Post/"
