@@ -153,7 +153,7 @@
   }
 
   function dots(label, n, max) {
-    let s = `<div class="dots"><b>${label}</b>`;
+    let s = `<div class="dots ${label.toLowerCase()}"><b>${label}</b>`;
     for (let i = 0; i < max; i++) s += `<span class="${i < n ? "on" : ""}"></span>`;
     return s + "</div>";
   }

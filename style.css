@@ -154,16 +154,18 @@ img{max-width:100%}
 [hidden]{display:none!important}
 
 /* ---------- Live diamond ---------- */
-.live-wrap{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;margin-top:14px}
+.live-wrap{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-top:14px}
 .diamond{width:112px;height:auto}
 .diamond .base{fill:none;stroke:var(--ink-2);stroke-width:2}
 .diamond .base.on{fill:var(--red);stroke:var(--red)}
 .diamond .home{fill:var(--line)}
 .count{display:flex;flex-direction:column;gap:8px;min-width:0}
-.count .dots{display:flex;align-items:center;gap:6px;font:600 11px/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
-.count .dots span{display:inline-block;width:11px;height:11px;border-radius:50%;border:2px solid var(--ink-2)}
+.count .dots{display:grid;grid-template-columns:6.6em repeat(4,12px);align-items:center;column-gap:7px;font:600 11px/1 var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.count .dots span{display:block;width:12px;height:12px;border-radius:50%;border:2px solid var(--ink-2);box-sizing:border-box}
 .count .dots span.on{background:var(--ink);border-color:var(--ink)}
-.count .dots b{width:3.2em}
+.count .dots b{font-weight:600;white-space:nowrap}
+.count .dots.balls span.on{background:var(--win);border-color:var(--win)}
+.count .dots.strikes span.on,.count .dots.outs span.on{background:var(--red);border-color:var(--red)}
 .matchup-now{font-size:13.5px;color:var(--ink-2)}
 .matchup-now b{color:var(--ink);font-weight:600}
 
