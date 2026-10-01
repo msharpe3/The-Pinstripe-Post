@@ -666,7 +666,10 @@
     const toggle = ["away", "home"].map((k) =>
       `<button type="button" data-side="${k}" aria-pressed="${k === pick}">${esc(abbrOf(box.teams[k].team))}</button>`).join("");
 
-    const batters = (t.batters || []).map(P).filter((p) => p.person && (p.battingOrder || p.stats?.batting?.atBats != null));
+    // Sort by batting order so each substitute sits right under the player he replaced (e.g. 900, then 901).
+    const slot = (p) => (p.battingOrder ? +p.battingOrder : 9999);
+    const batters = (t.batters || []).map(P).filter((p) => p.person && (p.battingOrder || p.stats?.batting?.atBats != null))
+      .sort((a, b) => slot(a) - slot(b));
     const bRows = batters.map((p) => {
       const b = p.stats?.batting || {}, sub = p.battingOrder && +p.battingOrder % 100 !== 0;
       return `<tr class="${sub ? "sub" : ""}"><td>${pl(p.person.id, p.person.fullName)} <small>${esc(p.position?.abbreviation || "")}</small></td>
