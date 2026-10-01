@@ -7,6 +7,11 @@ The Pinstripe Post is a hub for live Yankees scores, broadcast info, roster move
 ## Features
 
 - **Game:** the live game with score, inning, runners on base, count, and the current batter vs. pitcher. Before a game, it shows a countdown to first pitch, the probable starters with their season stats, and the Yankees lineup once it's posted.
+- **Series tracker:** during the postseason, the Game tab shows the series score and a W/L dot for each game.
+- **Pitch tracker:** during live games, a strike zone (catcher's view) with every pitch of the at-bat, color-coded, plus pitch type, speed, and result.
+- **Live box score:** batting and pitching lines for both teams, updating during the game. The full box score for the last game is on the Scores tab.
+- **Playoffs:** the full AL and NL bracket from the Wild Card round through the World Series, with series scores. This tab appears only during the postseason.
+- **Player cards:** tap any underlined player name to see a photo, season stats, and the last five games.
 - **Where to watch:** TV, streaming, radio, and Spanish-language broadcasts for each game.
 - **Scores:** the last game's linescore and top Yankees performers, recent results, upcoming games, and AL East standings.
 - **Roster:** the active roster, the injured list, and roster moves from the last 30 days.
