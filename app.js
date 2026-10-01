@@ -358,11 +358,50 @@
     const me = rows.find((t) => t.team.id === NYY);
     if (me) {
       const rank = me.divisionRank ? ordinal(+me.divisionRank) + " AL East" : "";
-      $("heroRec").innerHTML = `<div class="num">${me.wins}-${me.losses}<small>${season} record</small></div>` +
+      heroRegular = `<div class="num">${me.wins}-${me.losses}<small>${season} record</small></div>` +
         (rank ? `<div>${esc(rank.split(" ")[0])}<small>AL East</small></div>` : "") +
         (me.streak?.streakCode ? `<div>${esc(me.streak.streakCode)}<small>Streak</small></div>` : "");
+      renderHero();
     }
   }
+  /* ---------------- Header record: regular season, or postseason when the Yankees are in it ---------------- */
+  let heroRegular = "";
+  const ROUND_NAME = { F: "Wild Card", D: "ALDS", L: "ALCS", W: "World Series" };
+
+  function renderHero() {
+    const mine = post.filter((x) => x.A?.id === NYY || x.B?.id === NYY);
+    if (!mine.length) { $("heroRec").innerHTML = heroRegular; return; }
+
+    // Every finished Yankees playoff game, oldest first.
+    const results = mine.flatMap((x) => x.games)
+      .filter((g) => state(g) === "Final")
+      .sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate))
+      .map((g) => (g.teams[side(g)].isWinner ? "W" : "L"));
+    const w = results.filter((r) => r === "W").length, l = results.length - w;
+    let streak = "";
+    if (results.length) {
+      const last = results[results.length - 1];
+      let n = 0;
+      for (let i = results.length - 1; i >= 0 && results[i] === last; i--) n++;
+      streak = last + n;
+    }
+
+    // The Yankees' most recent series.
+    const cur = mine[mine.length - 1];
+    const us = cur.A?.id === NYY ? cur.wa : cur.wb, them = cur.A?.id === NYY ? cur.wb : cur.wa;
+    const round = ROUND_NAME[cur.round] || "Series";
+    let seriesLabel;
+    if (cur.winner) seriesLabel = cur.winner.id === NYY ? (cur.round === "W" ? "Champions" : `Won ${round}`) : `Out in ${round}`;
+    else if (us > them) seriesLabel = `Lead ${round}`;
+    else if (us < them) seriesLabel = `Trail ${round}`;
+    else seriesLabel = us ? `${round} tied` : round;
+
+    $("heroRec").innerHTML =
+      `<div class="num">${w}-${l}<small>Postseason</small></div>` +
+      `<div class="num">${us}-${them}<small>${esc(seriesLabel)}</small></div>` +
+      (streak ? `<div>${esc(streak)}<small>Streak</small></div>` : "");
+  }
+
   const ordinal = (n) => { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
   /* ---------------- Roster ---------------- */
@@ -440,6 +479,7 @@
     $("t-playoffs").hidden = !post.length;
     if (!post.length && !$("p-playoffs").hidden) showTab("game");
     renderBracket();
+    renderHero();
   }
 
   function nextGameText(g) {
