@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="style.css?v=11">
+<link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 <div class="wrap">
@@ -28,7 +28,7 @@
         <span id="alertsBtnText">Game alerts</span>
       </button>
     </div>
-    <div class="logo-badge"><img src="logo.png?v=11" alt="New York Yankees logo" width="285" height="288"></div>
+    <div class="logo-badge"><img src="logo.png?v=13" alt="New York Yankees logo" width="285" height="288" draggable="false"></div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
@@ -120,6 +120,13 @@
   </div>
   <div class="foot"><span id="updated">Connecting to MLB…</span><span>Unofficial fan site · data from MLB Stats API · not affiliated with MLB or the Yankees</span></div>
 </div>
+<dialog class="vault" id="vaultDlg" aria-labelledby="vTitle">
+  <div class="vcard">
+    <div class="vface vfront"><img src="logo.png?v=13" alt="" draggable="false"><span>The Pinstripe Post</span></div>
+    <div class="vface vback"></div>
+  </div>
+  <button type="button" class="v-close" data-v="close" aria-label="Close">×</button>
+</dialog>
 <dialog class="pcard alerts" id="alertsDlg" aria-labelledby="alTitle">
   <button type="button" class="pc-close" id="alClose" aria-label="Close">×</button>
   <h2 id="alTitle">Game alerts</h2>
@@ -140,8 +147,10 @@
     if (el) el.textContent = "Page error: " + (e.message || "script failed to load") + ". Pull down to refresh.";
   }, true);
 </script>
-<script src="config.js?v=11"></script>
-<script src="alerts.js?v=11"></script>
-<script src="app.js?v=11"></script>
+<script src="config.js?v=13"></script>
+<script src="alerts.js?v=13"></script>
+<script src="history.js?v=13"></script>
+<script src="vault.js?v=13"></script>
+<script src="app.js?v=13"></script>
 </body>
 </html>

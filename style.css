@@ -358,3 +358,29 @@ table.bx th:first-child{font-size:10px}
 .alerts .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .alerts .btn:disabled{opacity:.5}
 @media (prefers-reduced-motion:reduce){.switch,.switch::after{transition:none}}
+
+/* ---------- Hidden history card (tap logo 4x / long-press) ---------- */
+.logo-badge{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;cursor:default}
+.logo-badge img{-webkit-user-drag:none;pointer-events:none}
+.vault{border:0;padding:0;background:transparent;width:min(340px,calc(100vw - 40px));overflow:visible}
+.vault::backdrop{background:rgba(5,12,25,.72)}
+.vcard{position:relative;width:100%;aspect-ratio:5/7;perspective:1200px}
+.vface{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .8s cubic-bezier(.3,.7,.2,1)}
+.vfront{transform:rotateY(0);background:#0c2340;background-image:repeating-linear-gradient(90deg,transparent 0 17px,rgba(255,255,255,.1) 17px 19px);border:10px solid #f4f1e8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.vfront img{width:62%;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)}
+.vfront span{font:900 22px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.vback{transform:rotateY(180deg);background:#e9e2cf;color:#1b2a44;border:10px solid #f4f1e8;padding:16px 18px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.5);
+  background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(27,42,68,.08) 27px 28px)}
+.vcard.flipped .vfront{transform:rotateY(-180deg)}
+.vcard.flipped .vback{transform:rotateY(0)}
+.v-top{display:flex;justify-content:space-between;gap:8px;font:700 11px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:#c8102e;border-bottom:2px solid #1b2a44;padding-bottom:8px}
+.v-year{font:900 64px/.9 var(--f-display);color:#0c2340;letter-spacing:.01em}
+.v-title{font:800 24px/1.05 var(--f-display);text-transform:uppercase;letter-spacing:.03em;color:#0c2340;margin:0}
+.v-note{margin:0;font-size:12.5px;font-style:italic;color:#4d5a70}
+.v-text{margin:0;font:15px/1.5 var(--f-body);color:#1b2a44}
+.v-foot{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;padding-top:8px}
+.v-btn{border:0;border-radius:8px;background:#0c2340;color:#fff;font:700 13px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase;padding:10px 12px;cursor:pointer}
+.v-btn.ghost{background:transparent;color:#0c2340;border:1.5px solid #0c2340}
+.v-btn:focus-visible,.v-close:focus-visible{outline:2px solid #c8102e;outline-offset:2px}
+.v-close{position:absolute;top:-14px;right:-14px;width:36px;height:36px;border-radius:50%;border:0;background:#fff;color:#0c2340;font:400 24px/1 var(--f-body);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+@media (prefers-reduced-motion:reduce){.vface{transition:none}}

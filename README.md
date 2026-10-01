@@ -51,6 +51,7 @@ Alerts come from a small service in `worker/` that runs on Cloudflare Workers (f
 | `manifest.webmanifest` | Home Screen app settings |
 | `favicon.png`, `icon-*.png`, `apple-touch-icon.png` | Browser and Home Screen icons |
 | `worker/` | The alert service (Cloudflare Worker) |
+| `history.js`, `vault.js` | 🤫 |
 
 ## Disclaimer
 
