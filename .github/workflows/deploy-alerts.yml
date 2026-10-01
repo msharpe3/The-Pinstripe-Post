@@ -18,11 +18,11 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
 
@@ -42,14 +42,25 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
         run: |
-          npx --yes wrangler@4 deploy 2>&1 | tee deploy.log
+          set +e
+          npx --yes wrangler@4 deploy > deploy.log 2>&1
+          code=$?
+          cat deploy.log
           url=$(grep -oE 'https://[A-Za-z0-9.-]+\.workers\.dev' deploy.log | head -1)
-          echo "Service address: $url"
+          if [ "$code" -ne 0 ] || [ -z "$url" ]; then
+            # Put Cloudflare's error lines on the run summary page so they're easy to find.
+            sed 's/\x1b\[[0-9;]*m//g' deploy.log | grep -iE 'error|✘|subdomain|authentication|permission|not found|code: ' | head -10 | while IFS= read -r line; do echo "::error::$line"; done
+            echo "::error::Cloudflare deploy didn't finish (exit code $code). Full output is in the 'Deploy to Cloudflare' step."
+            exit 1
+          fi
+          echo "::notice::Alert service is live at $url"
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Save the service address for the site
         if: steps.deploy.outputs.url != ''
+        shell: bash
         env:
           URL: ${{ steps.deploy.outputs.url }}
           GH_TOKEN: ${{ github.token }}
