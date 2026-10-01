@@ -45,8 +45,15 @@ jobs:
         shell: bash
         run: |
           set +e
-          npx --yes wrangler@4 deploy > deploy.log 2>&1
-          code=$?
+          # Retry, since npm occasionally lists a new release before its download is ready.
+          for attempt in 1 2 3; do
+            npx --yes wrangler@4 deploy > deploy.log 2>&1
+            code=$?
+            if [ "$code" -eq 0 ] || ! grep -q "npm error" deploy.log; then break; fi
+            echo "npm download problem (attempt $attempt), retrying in 30 seconds..."
+            npm cache clean --force > /dev/null 2>&1
+            sleep 30
+          done
           cat deploy.log
           url=$(grep -oE 'https://[A-Za-z0-9.-]+\.workers\.dev' deploy.log | head -1)
           if [ "$code" -ne 0 ] || [ -z "$url" ]; then
