@@ -79,6 +79,7 @@ export class Alerts extends DurableObject {
 
   async tick() {
     const now = Date.now();
+    await this.storage.put("lastCron", new Date(now).toISOString());
     const data = await mlb(`/api/v1/schedule?sportId=1&teamId=${NYY}&startDate=${etDate(now - 864e5)}&endDate=${etDate(now)}` +
       `&hydrate=team,linescore,seriesStatus,broadcasts(all),probablePitcher,lineups`);
     const games = (data.dates || []).flatMap((d) => d.games || []).filter((g) => isRelevant(g, now));
@@ -144,9 +145,10 @@ export class Alerts extends DurableObject {
         return json({ ok: status >= 200 && status < 300, status });
       }
 
+      case "/health":
       case "/status": {
         const subs = await this.subscribers();
-        return json({ subscribers: subs.length, lastTick: (await this.storage.get("lastTick")) || null, lastError: (await this.storage.get("lastError")) || null });
+        return json({ subscribers: subs.length, lastTick: (await this.storage.get("lastTick")) || null, lastError: (await this.storage.get("lastError")) || null, lastCron: (await this.storage.get("lastCron")) || null, now: new Date().toISOString() });
       }
 
       case "/tick": {
