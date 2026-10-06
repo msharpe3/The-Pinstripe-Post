@@ -627,11 +627,12 @@
     $("pitchMatchup").innerHTML = `${pl(m.pitcher?.id, m.pitcher?.fullName)} <span>to</span> ${pl(m.batter?.id, m.batter?.fullName)}${bats ? ` <span>(${bats})</span>` : ""}${result}`;
 
     // Zone drawing: 50 units per foot. x spans -2..2 ft, height spans 0.5..5.3 ft.
+    // MLB gives pX from the catcher's view; mirror it to match the center-field TV camera.
     const first = pitches.find((p) => p.pitchData?.strikeZoneTop);
     const top = first?.pitchData.strikeZoneTop || 3.4, bot = first?.pitchData.strikeZoneBottom || 1.6;
-    const X = (px) => 100 + px * 50, Y = (pz) => 240 - (pz - 0.5) * 50;
+    const X = (px) => 100 - px * 50, Y = (pz) => 240 - (pz - 0.5) * 50;
     const half = 17 / 24; // half the plate width (17 in) in feet
-    const zl = X(-half), zr = X(half), zt = Y(top), zb = Y(bot), zw = zr - zl;
+    const zl = Math.min(X(-half), X(half)), zr = Math.max(X(-half), X(half)), zt = Y(top), zb = Y(bot), zw = zr - zl;
     let svg = `<rect class="z-bg" x="0" y="0" width="200" height="240" rx="8"/>`;
     for (let i = 1; i < 3; i++) {
       const x = zl + (zw * i) / 3, y = zt + ((zb - zt) * i) / 3;
