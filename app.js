@@ -633,13 +633,23 @@
     const X = (px) => 100 - px * 50, Y = (pz) => 240 - (pz - 0.5) * 50;
     const half = 17 / 24; // half the plate width (17 in) in feet
     const zl = Math.min(X(-half), X(half)), zr = Math.max(X(-half), X(half)), zt = Y(top), zb = Y(bot), zw = zr - zl;
-    let svg = `<rect class="z-bg" x="0" y="0" width="200" height="240" rx="8"/>`;
+    let svg = `<rect class="z-bg" x="-30" y="0" width="260" height="240" rx="8"/>`;
+    // Batter silhouette, as on the TV broadcast: righties on screen right, lefties on screen left.
+    // Drawn for a righty, then mirrored around the plate for a lefty. It sits behind the pitch dots.
+    const side = m.batSide?.code;
+    if (side === "R" || side === "L") {
+      const flip = side === "L" ? ` transform="translate(200 0) scale(-1 1)"` : "";
+      // batter.png is a white cutout used as a stencil, so the silhouette takes the theme's color.
+      svg += `<defs><mask id="batterMask" maskUnits="userSpaceOnUse"><image href="batter.png?v=2" x="148" y="9" width="76" height="227"/></mask></defs>
+        <g class="z-batter"${flip}><rect class="z-body" x="148" y="9" width="76" height="227" mask="url(#batterMask)"/></g>`;
+    }
     for (let i = 1; i < 3; i++) {
       const x = zl + (zw * i) / 3, y = zt + ((zb - zt) * i) / 3;
       svg += `<line class="z-grid" x1="${x}" y1="${zt}" x2="${x}" y2="${zb}"/><line class="z-grid" x1="${zl}" y1="${y}" x2="${zr}" y2="${y}"/>`;
     }
     svg += `<rect class="z-box" x="${zl}" y="${zt}" width="${zw}" height="${zb - zt}"/>`;
-    svg += `<path class="z-plate" d="M${zl} 224h${zw}v6l-${zw / 2} 7l-${zw / 2} -7z"/>`;
+    // Home plate as seen on TV from center field: flat edge toward the camera, point toward the catcher.
+    svg += `<path class="z-plate" d="M${zl} 237h${zw}v-6l-${zw / 2} -7l-${zw / 2} 7z"/>`;
     pitches.forEach((p, i) => {
       const c = p.pitchData?.coordinates;
       if (!c || c.pX == null || c.pZ == null) return;
