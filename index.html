@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>The Pinstripe Post</title>
 <meta name="description" content="Live Yankees scores, where to watch, roster moves, and news.">
 <meta name="theme-color" content="#0c2340">
@@ -137,6 +137,13 @@
   <button type="button" class="pc-close" id="pcClose" aria-label="Close">×</button>
   <div id="pcBody"></div>
 </dialog>
+<script>
+  // Behave like an app: block pinch-zoom (Safari ignores user-scalable=no on its own).
+  ["gesturestart", "gesturechange", "gestureend"].forEach(function (t) {
+    document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false });
+  });
+  document.addEventListener("touchmove", function (e) { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+</script>
 <script>
   // Show startup errors on the page so they're visible on a phone.
   window.addEventListener("error", function (e) {
